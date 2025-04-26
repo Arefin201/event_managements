@@ -4,7 +4,6 @@ use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 
-Route::get('/', [UserController::class, 'index'])->name('dashboard'); 
 
 // User Controller
 Route::group(['middleware'=>'guest'],function(){
@@ -17,4 +16,10 @@ Route::group(['middleware'=>'guest'],function(){
 
 });
 
+Route::group(['middleware'=>'auth'],function(){
+    //Log Out
+    Route::get('/logout', [UserController::class,'logout'])->name('logout');
+   // DashBoard
+    Route::get('/', [UserController::class, 'index'])->name('dashboard'); 
 
+});

@@ -59,14 +59,20 @@
       <p class="text-gray-500 text-sm mb-4">or use your email password</p>
 
       <!-- Input Form -->
-      <form class="w-full max-w-sm space-y-4">
-        <input type="email" placeholder="Email"
+      <form class="w-full max-w-sm space-y-4" action="{{ route('loginPost') }}" method="POST">
+        @csrf
+        <input type="email" placeholder="Email" name="email" value="{{ old('email') }}"
           class="w-full px-4 py-2 border rounded bg-gray-100 focus:outline-none" />
-
+        @error('email')
+        <div class="text-red-500 text-sm mt-1">{{ $message }}</div> 
+        @enderror
         <div class="relative">
-          <input type="password" id="password" placeholder="Password"
+          <input type="password" id="password" placeholder="Password" name="password" value="{{ old('password') }}"
             class="w-full px-4 py-2 border rounded bg-gray-100 focus:outline-none pr-10" />
-          <span class="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer" onclick="togglePassword()">
+          @error('password')
+          <div class="text-red-500 text-sm mt-1">{{ $message }}</div>
+          @enderror
+            <span class="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer" onclick="togglePassword()">
             <i id="toggleIcon" class="fa-regular fa-eye-slash text-gray-600"></i>
           </span>
         </div>

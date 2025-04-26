@@ -47,8 +47,8 @@
         </button>
         <!-- Login/Logout -->
         <div class="flex items-center gap-4 ml-auto">
-          <a href="login.html" class="bg-green-500 text-white px-4 py-1 rounded hover:bg-green-600 transition">Login</a>
-          <a class="bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600 transition">Logout</a>
+          
+          <a href="{{ url('logout') }}" class="bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600 transition">Logout</a>
           <span class="hidden md:inline text-gray-700 font-semibold">Admin</span>
           <img src="https://i.pravatar.cc/40" class="w-10 h-10 rounded-full border-2 border-blue-500" alt="User" />
         </div>
