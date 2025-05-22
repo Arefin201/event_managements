@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('password');
             $table->ipAddress('ip_address')->nullable();
             $table->enum('role', ['admin', 'user', 'event_manager'])->default('user'); 
+            $table->string('profile_image')->nullable();
             $table->rememberToken()->nullable();
             $table->timestamps();
         });

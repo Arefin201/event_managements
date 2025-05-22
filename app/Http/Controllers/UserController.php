@@ -12,98 +12,58 @@ use Illuminate\Http\Request;
 class UserController extends Controller
 {
 
+    /* Get All User */
+    public function getUser()
+    {
+        $users = User::all();
+        return response()->json($users);
+    }
 
-    public function index()
+    /* Get Single User */
+    public function getsingleUser(Request $request, $id)
     {
-        return view('dashboard');
+        $user = User::findOrFail($id);
+        return response()->json($user);
     }
-    // Login Section
-    public function login(Request $request)
+
+    /* Create single User */
+    public function creatUser(Request $request)
     {
-        return view('login');
-    }
-    public function loginPost(Request $request)
-    {
-        // Validate input
+        // dd($request->all());
         $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
-
-        User::where('email', $request->email)->firstOrFail();
-
-        // Check credentials
-        if (Auth::attempt($request->only('email', 'password'))) {
-            // Authentication passed...
-            return redirect('/')->with('success', 'Login Successfully!');
-        }
-        // Authentication failed...
-        return redirect('sign-in')->withErrors(['error' => 'Invalid credentials!']);
-
-
-        /* Another way 
-
-
-      // Validate input
-             $request->validate([
-                'email' => 'required|email',
-                'password' => 'required',
-            ]);
-
-            //Check if email exists
-            $user = DB::table('users')->where('email', $request->email)->first();
-
-            if (!$user) {
-                return redirect()->back()->withErrors(['email' => 'This email does not exist.']);
-            }
-
-            // Check password
-            if (!Hash::check($request->password, $user->password)) {
-                return redirect()->back()->withErrors(['password' => 'Incorrect password.']);
-            }
-
-            // Authenticate the user
-            Auth::loginUsingId($user->id);
-
-
-            return redirect('/');
-
-
-
-        */
-
-
-    }
-
-
-
-    /* Creat / Sing-UP Section */
-    public function signup(Request $request)
-    {
-        return view('signup');
-    }
-
-    public function signupPost(Request $request)
-    {
-        $validateData = $request->validate([
-            'name' => 'required|string|min:3|max:50',
+            'role' => 'required',
+            'name' => 'required|string',
             'email' => 'required|string|email|lowercase|unique:users,email',
             'password' => 'required|min:6',
-        ]);
-        User::create([
-            'name' => $validateData['name'],
-            'email' => $validateData['email'],
             'ip_address' => $request->ip(),
-            'password' => bcrypt($validateData['password']),
         ]);
-
-        if (Auth::attempt($request->only('email', 'password'))) {
-            return redirect('/sign-in')->with('success', 'User Created Successfully!');
-        }
-
-        return redirect('/sign-up')->withErrors(['error' => 'Registration failed!']);
+        $user = User::create($request->all());
+        return response()->json(['message' => 'user create succesfull!', 'data' => $user]);
     }
 
+    /* Update single User */
+    public function updateUser(Request $request, $id)
+    {
+        
+        $request->validate([
+            'role' => 'required',
+            'name' => 'required|string',
+            'email' => 'required|email|unique:users,email,'. $id,
+            'password' => 'required|min:6',
+        ]);
+        $user = User::findOrFail($id);
+        $user->update($request->all());
+        return response()->json(['message' => 'success', 'data' => $user]);
+    }
+
+
+
+    /* Delete Single User */
+    public function deleteUser(Request $request, $id)
+    {
+        User::destroy($id);
+        return response()->json(['message' => 'User Delete', 'data' => null]);
+    }
 
 
     /* Log Out */
@@ -113,9 +73,6 @@ class UserController extends Controller
         Auth::logout();
         return redirect('sign-in')->with('success', 'Logout Successfully!');
     }
-
-
-
 
 
 
